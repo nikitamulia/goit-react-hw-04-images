@@ -1,28 +1,23 @@
-import React from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import s from './Searchbar.module.css'
 
-export class Searchbar extends React.Component{
-    state = {
-        searchData: '',
-    }
-    static propTypes = {
-        onSubmit: PropTypes.func.isRequired,
-      };
-    handleNameChange = event => {
-        this.setState({searchData: event.currentTarget.value.toLowerCase()})
-    }
-    handleSubmit = event => {
+export default function Searchbar({onSubmit}){
+    const [searchData, setSearchData] = useState('');
+    
+    const handleNameChange = event => setSearchData(event.currentTarget.value.toLowerCase())
+    
+    const handleSubmit = event => {
         event.preventDefault();
-        this.props.onSubmit(this.state.searchData)
-        this.setState({searchData: ''})
+        onSubmit(searchData);
+        setSearchData('');
     }
 
 
-    render(){
+   
         return(
             <header className={s.Searchbar}>
-                <form className={s.SearchForm} onSubmit={this.handleSubmit}>
+                <form className={s.SearchForm} onSubmit={handleSubmit}>
                     <button type="submit"  className={s.SearchForm__button }>
                     <span className={s.SearchFormButtonLabel}>Search</span>
                     </button>
@@ -33,13 +28,16 @@ export class Searchbar extends React.Component{
                     autoComplete="off"
                     autoFocus
                     placeholder="Search images and photos"
-                    value={this.state.searchData}
-                    onChange={this.handleNameChange}
+                    value={searchData}
+                    onChange={handleNameChange}
                     />
                 </form>
             </header>
         )
-    }
+    
 }
 
+Searchbar.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+}
 
